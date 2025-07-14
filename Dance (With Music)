@@ -1,0 +1,63 @@
+-- Made By: Lock1213
+-- Just Spin You And Play a Song (Original Song its: Portal Radio Music)
+-- Music Bypass? Idk
+-- Enjoy!
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UIS = game:GetService("UserInputService")
+
+local LocalPlayer = Players.LocalPlayer
+local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local Humanoid = Character:WaitForChild("Humanoid")
+local HRP = Character:WaitForChild("HumanoidRootPart")
+
+local AnimationID = "rbxassetid://8470415955"
+local MusicID = "rbxassetid://137819019690300"
+local AnimationSpeed = 1
+local MusicPitch = 0.32
+
+local isActive = true
+
+local Animation = Instance.new("Animation")
+Animation.AnimationId = AnimationID
+local AnimationTrack = Humanoid:LoadAnimation(Animation)
+AnimationTrack.Looped = true
+AnimationTrack:Play()
+AnimationTrack:AdjustSpeed(AnimationSpeed)
+
+local Sound = Instance.new("Sound")
+Sound.SoundId = MusicID
+Sound.Volume = 1
+Sound.Looped = true
+Sound.PlaybackSpeed = MusicPitch
+Sound.Name = "LoopedMusic"
+Sound.Parent = workspace
+Sound:Play()
+
+RunService.RenderStepped:Connect(function()
+	if isActive then
+		
+		if not AnimationTrack.IsPlaying then
+			AnimationTrack:Play()
+			AnimationTrack:AdjustSpeed(AnimationSpeed)
+		end
+
+		HRP.CFrame = HRP.CFrame * CFrame.Angles(0, math.rad(15), 0)
+	end
+end)
+
+UIS.InputBegan:Connect(function(input, gameProcessed)
+	if gameProcessed then return end
+	if input.KeyCode == Enum.KeyCode.T then
+		isActive = not isActive
+		if isActive then
+			AnimationTrack:Play()
+			AnimationTrack:AdjustSpeed(AnimationSpeed)
+			Sound:Play()
+		else
+			AnimationTrack:Stop()
+			Sound:Stop()
+		end
+	end
+end)
